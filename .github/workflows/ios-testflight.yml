@@ -39,7 +39,16 @@ jobs:
       - name: App Store Connect API anahtarını yaz
         run: |
           mkdir -p "$RUNNER_TEMP/keys"
-          echo "${{ secrets.APP_STORE_CONNECT_KEY_BASE64 }}" | base64 --decode > "$RUNNER_TEMP/keys/AuthKey_${ASC_KEY_ID}.p8"
+          KEY_FILE="$RUNNER_TEMP/keys/AuthKey_${ASC_KEY_ID}.p8"
+          # Secret, .p8 dosyasının düz metni ya da base64 hâli olabilir.
+          if printf '%s' "$ASC_KEY_RAW" | grep -q "BEGIN PRIVATE KEY"; then
+            printf '%s\n' "$ASC_KEY_RAW" > "$KEY_FILE"
+          else
+            printf '%s' "$ASC_KEY_RAW" | tr -d ' \r\n' | base64 --decode > "$KEY_FILE"
+          fi
+          grep -q "BEGIN PRIVATE KEY" "$KEY_FILE" || { echo "::error::APP_STORE_CONNECT_KEY_BASE64 okunamadı. .p8 dosyasının içeriğini olduğu gibi yapıştır."; exit 1; }
+        env:
+          ASC_KEY_RAW: ${{ secrets.APP_STORE_CONNECT_KEY_BASE64 }}
 
       - name: Arşivle (imzalama otomatik)
         run: |
