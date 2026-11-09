@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#4553a0"/>
+      <stop offset="1" stop-color="#2c3470"/>
+    </linearGradient>
+    <mask id="cres">
+      <rect width="1024" height="1024" fill="#000"/>
+      <circle cx="512" cy="540" r="330" fill="#fff"/>
+      <circle cx="512" cy="380" r="330" fill="#000"/>
+    </mask>
+  </defs>
+  <rect width="1024" height="1024" fill="url(#bg)"/>
+  <!-- stars -->
+  <path d="M232 214l14 38 38 14-38 14-14 38-14-38-38-14 38-14z" fill="#fbe9c9"/>
+  <circle cx="330" cy="330" r="12" fill="#fbe9c9" opacity=".75"/>
+  <circle cx="190" cy="420" r="9" fill="#fbe9c9" opacity=".55"/>
+  <!-- baby head -->
+  <circle cx="512" cy="520" r="168" fill="#fde3d2"/>
+  <path d="M500 356c-6-34 26-52 46-38 14 10 8 32-10 30" fill="none" stroke="#e9875e" stroke-width="20" stroke-linecap="round"/>
+  <path d="M432 530q24 26 48 0M544 530q24 26 48 0" fill="none" stroke="#2c3470" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="420" cy="580" r="22" fill="#f6b39a"/>
+  <circle cx="604" cy="580" r="22" fill="#f6b39a"/>
+  <!-- crescent cradle as blanket -->
+  <rect width="1024" height="1024" fill="#fbe9c9" mask="url(#cres)"/>
+  <!-- pış pış pat waves -->
+  <path d="M742 300a70 70 0 0 1 0 110" fill="none" stroke="#f2a98a" stroke-width="30" stroke-linecap="round"/>
+  <path d="M812 252a140 140 0 0 1 0 206" fill="none" stroke="#f7c9b2" stroke-width="30" stroke-linecap="round"/>
+</svg>

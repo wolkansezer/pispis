@@ -1,0 +1,9 @@
+{
+  "appId": "com.volkansezer.pispis",
+  "appName": "Pışpış",
+  "webDir": "www",
+  "ios": { "contentInset": "never", "backgroundColor": "#15161f" },
+  "plugins": {
+    "LocalNotifications": { "iconColor": "#3f4a8a" }
+  }
+}
