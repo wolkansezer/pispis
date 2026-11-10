@@ -525,7 +525,9 @@ function vSettings(){
   <p class="muted" style="margin:0;font-size:13px">Gece modu, karanlıkta mama verirken gözü yormaz.</p></div></div>
   <div class="card"><div class="form"><h2 style="font-size:19px">Kayıtlar</h2>
   <p class="muted" style="margin:0;font-size:14px">${mode==="db"?"Kayıtlar buluta kaydediliyor. Aile kodunu paylaştığın kişiyle aynı kayıtları anlık görürsünüz.":"Kayıtlar bu telefonda saklanıyor."} Toplam <b class="num">${S.events.length}</b> kayıt.</p>
-  <button class="btn danger" id="clear90">90 günden eski kayıtları sil</button></div></div>
+  <button class="btn danger" id="clear90">90 günden eski kayıtları sil</button>
+  <button class="btn danger" id="delall">Hesabımı ve tüm verilerimi sil</button>
+  <p class="muted" style="margin:0;font-size:12.5px">Bu telefondaki tüm kayıtlar, ayarlar ve hesabın silinir. Aile kodunu eşinle paylaşıyorsan ortak kayıtlar eşinin telefonunda kalır.</p></div></div>
   ${vSupport()}
   <div class="card"><div class="about"><h2 style="font-size:19px">Hakkında</h2>
   <span><b>Pışpış</b> · Bebek bakım takip uygulaması · Sürüm 1.0</span>
@@ -764,6 +766,14 @@ function bind(){
   const nse=document.getElementById("n-self");if(nse)nse.onchange=()=>{N.self=nse.checked;saveN()};
   const pf=document.getElementById("pf");
   if(pf)pf.onsubmit=ev=>{ev.preventDefault();setMeta("profile",{name:pf.querySelector("#p-name").value.trim()||"Bebeğim",birth:pf.querySelector("#p-birth").value,feedEvery:+pf.querySelector("#p-every").value,defaultMl:+pf.querySelector("#p-ml").value});toast("Kaydedildi")};
+  const da=document.getElementById("delall");
+  if(da)da.onclick=()=>confirmBox("Hesabın ve tüm verilerin silinsin mi?","Kayıtlar, stok, randevular, ses kayıtları ve ayarlar kalıcı olarak silinir. Bu işlem geri alınamaz.",async()=>{
+    toast("Siliniyor…");
+    try{const NP=window.__pispis;
+      if(NP&&NP.deleteAccount){const r=await NP.deleteAccount();toast(r.shared?"Hesabın silindi. Ortak kayıtlar eşinde kalır.":"Hesabın ve tüm verilerin silindi.")}
+      else{try{localStorage.clear()}catch(e){}toast("Tüm verilerin silindi.")}
+    }catch(e){toast("Silme tamamlanamadı, internet bağlantını kontrol et.")}
+    setTimeout(()=>location.reload(),1800)});
   const c9=document.getElementById("clear90");
   if(c9)c9.onclick=()=>confirmBox("90 günden eski kayıtlar silinsin mi?","Bu işlem geri alınamaz.",async()=>{const lim=Date.now()-90*864e5;const old=S.events.filter(e=>e.ts<lim);for(const e of old)await delEvent(e.id);toast(old.length+" kayıt silindi")});
 }

@@ -5,7 +5,7 @@ import { LocalNotifications } from "@capacitor/local-notifications";
 import { Haptics, ImpactStyle } from "@capacitor/haptics";
 import { KeepAwake } from "@capacitor-community/keep-awake";
 import { initializeApp } from "firebase/app";
-import { initializeAuth, indexedDBLocalPersistence, signInAnonymously, onAuthStateChanged } from "firebase/auth";
+import { initializeAuth, indexedDBLocalPersistence, signInAnonymously, onAuthStateChanged, deleteUser } from "firebase/auth";
 import {
   initializeFirestore, persistentLocalCache, persistentSingleTabManager,
   doc, collection, query, orderBy, limit, setDoc, updateDoc, deleteDoc, getDoc, getDocs, onSnapshot, arrayUnion
@@ -102,6 +102,31 @@ async function joinHousehold(raw) {
   location.reload();
 }
 
+/* ---- Hesabı ve verileri sil ---- */
+// Tek üye: ailenin tüm kayıtları silinir. Birden fazla üye: ortak kayıtlar eşte kalır, bu kişinin hesabı silinir.
+async function deleteAccount() {
+  if (native) { try { await LocalNotifications.cancel({ notifications: (await LocalNotifications.getPending()).notifications.map(n => ({ id: n.id })) }); } catch (e) {} }
+  let shared = false;
+  if (fs && uid && hid) {
+    try {
+      const h = await getDoc(doc(fs, "households", hid));
+      const members = (h.exists() && h.data().members) || [];
+      shared = members.filter(m => m !== uid).length > 0;
+      if (!shared) {
+        for (const c of ["events", "stock", "appts", "voices", "meta"]) {
+          const snap = await getDocs(collection(fs, `households/${hid}/${c}`));
+          for (const d of snap.docs) await deleteDoc(d.ref);
+        }
+      }
+    } catch (e) {}
+    try { await deleteDoc(doc(fs, "support", uid)); } catch (e) {}
+    try { if (auth && auth.currentUser) await deleteUser(auth.currentUser); } catch (e) {}
+  }
+  try { localStorage.clear(); } catch (e) {}
+  try { indexedDB.databases && (await indexedDB.databases()).forEach(d => d.name && indexedDB.deleteDatabase(d.name)); } catch (e) {}
+  return { shared };
+}
+
 /* ---- Bildirimler ---- */
 let lastPlan = "", permAsked = false;
 async function ensurePerm() {
@@ -175,6 +200,6 @@ window.__pispis = {
   native, configured, ready,
   get uid() { return uid; },
   get household() { return hid; },
-  joinHousehold, plan, now, keepAwake,
+  joinHousehold, deleteAccount, plan, now, keepAwake,
   get awake() { return awake; }
 };
