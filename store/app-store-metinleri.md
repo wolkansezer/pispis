@@ -14,7 +14,7 @@ App Store Connect › Uygulamam › Pışpış › "1.0 Hazırlanıyor" sayfası
 - **Yaş sınırı:** 4+ (anketteki tüm sorulara "Hayır")
 - **Telif hakkı:** 2026 Volkan Sezer
 - **Destek URL'si:** https://www.instagram.com/wolkansezer/
-- **Gizlilik politikası URL'si:** gizlilik.html sayfasının yayınlandığı adres (KURULUM.md, adım 6)
+- **Gizlilik politikası URL'si:** https://tally.so/r/o9Dq8M
 
 ## Tanıtım metni (170 karakter)
 
